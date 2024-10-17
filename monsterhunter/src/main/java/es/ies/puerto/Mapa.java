@@ -72,11 +72,16 @@ public class Mapa {
                 Cazador cazador = (Cazador) objeto;
                 cazar(cazador, (Monstruo) ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]]);
             }
-            if (ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]] instanceof Cazador) {
+            if (ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]] != null) {
                 return;
             }
 
         } else {
+            if (ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]] instanceof Cueva) {
+                Monstruo monstruo = (Monstruo) objeto;
+                Cueva cueva = (Cueva) ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]];
+                monstruo.intentarEntrarCueva(cueva);
+            }
             if (ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]] != null) {
                 return;
             }
@@ -99,7 +104,6 @@ public class Mapa {
         }
 
     }
-
 
     public String mostrarMapa() {
         StringBuilder mapaVisualizado = new StringBuilder();

@@ -28,6 +28,23 @@ public class Monstruo extends Objetos {
         }
     }
 
+    public void intentarEntrarCueva(Cueva cueva) {
+        if (cueva.getSemaphore().tryAcquire()) {
+            System.out.println("Monstruo ha entrado en la cueva");
+            try {
+                cueva.getSemaphore().acquire();
+                getMapa().eliminarMonstruo(this);
+                Thread.sleep(2000);
+                status = true;
+                getMapa().agregarObjeto(this);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            cueva.getSemaphore().release();
+
+        }
+    }
+
     public int getPuntosDeVida() {
         return puntosDeVida;
     }
