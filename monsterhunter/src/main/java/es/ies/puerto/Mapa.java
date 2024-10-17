@@ -50,6 +50,16 @@ public class Mapa {
 
     }
 
+    public synchronized void agregarObjeto(Objetos objeto) {
+        int[] posicionAleatoria = generarUbicacionAleatoria();
+        while (ubicaciones[posicionAleatoria[0]][posicionAleatoria[1]] != null) {
+            posicionAleatoria = generarUbicacionAleatoria();
+        }
+        objeto.setX(posicionAleatoria[0]);
+        objeto.setY(posicionAleatoria[1]);
+        ubicaciones[posicionAleatoria[0]][posicionAleatoria[1]] = objeto;
+    }
+
     public synchronized void moverObjeto(Objetos objeto) {
         int[] posicionActual = objeto.getPosicion();
         int[] nuevaPosicion = generarUbicacionAleatoriaCercana(posicionActual);
@@ -90,30 +100,19 @@ public class Mapa {
 
     }
 
-    public synchronized Monstruo generarMonstruo() {
-        int[] ubicacionAleatoria = generarUbicacionAleatoria();
-
-        if (ubicaciones[ubicacionAleatoria[0]][ubicacionAleatoria[1]] == null) {
-            Monstruo monstruo = new Monstruo(this, ubicacionAleatoria[0], ubicacionAleatoria[1]);
-            ubicaciones[ubicacionAleatoria[0]][ubicacionAleatoria[1]] = monstruo;
-            return monstruo;
-        } else {
-            generarMonstruo();
-        }
-        return null;
-
-    }
 
     public String mostrarMapa() {
         StringBuilder mapaVisualizado = new StringBuilder();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 if (ubicaciones[i][j] == null) {
-                    mapaVisualizado.append(".");
+                    mapaVisualizado.append(" ·");
                 } else if (ubicaciones[i][j] instanceof Cazador) {
-                    mapaVisualizado.append("C");
+                    mapaVisualizado.append(" H");
+                } else if (ubicaciones[i][j] instanceof Cueva) {
+                    mapaVisualizado.append(" C");
                 } else if (ubicaciones[i][j] instanceof Monstruo) {
-                    mapaVisualizado.append("M");
+                    mapaVisualizado.append(" M");
                 }
             }
             mapaVisualizado.append("\n");

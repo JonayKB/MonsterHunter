@@ -17,7 +17,8 @@ public class GeneradorMonstruo implements Runnable {
         double time = 0;
         while (true) {
             try {
-                Monstruo monstruo = mapa.generarMonstruo();
+                Monstruo monstruo = new Monstruo(mapa, 0, 0);
+                mapa.agregarObjeto(monstruo);
                 monstruos.add(monstruo);
                 Thread monstruoThread = new Thread(monstruo);
                 monstruoThread.start();
