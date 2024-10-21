@@ -26,7 +26,6 @@ public class Monstruo extends Objetos {
     }
 
     public void intentarEntrarCueva(Cueva cueva) {
-        System.out.println(cueva.getSemaphore().availablePermits());
         if (cueva.getSemaphore().tryAcquire()) {
             try {
                 getMapa().eliminarMonstruo(this);

@@ -2,6 +2,7 @@ package es.ies.puerto;
 
 public class Cazador extends Objetos {
     private int monstruosCazados;
+    private int danioBase = 1;
 
     public Cazador(int id, Mapa mapa, int x, int y) {
         super(id, mapa, x, y);
@@ -14,9 +15,11 @@ public class Cazador extends Objetos {
     @Override
     public void run() {
         while (true) {
-            getMapa().moverObjeto(this);
+
             try {
+                getMapa().moverObjeto(this);
                 Thread.sleep(1000);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -38,7 +41,15 @@ public class Cazador extends Objetos {
 
     public int getDanio() {
 
-        return (int) (Math.random() * 100);
+        return (int) (Math.random() * 100)+getDanioBase();
+    }
+
+    public int getDanioBase() {
+        return this.danioBase;
+    }
+
+    public void setDanioBase(int danioBase) {
+        this.danioBase = danioBase;
     }
 
 }

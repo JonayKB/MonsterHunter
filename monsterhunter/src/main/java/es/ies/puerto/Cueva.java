@@ -2,17 +2,18 @@ package es.ies.puerto;
 
 import java.util.concurrent.Semaphore;
 
-public class Cueva extends Objetos{
+public class Cueva extends Objetos {
 
     private Semaphore semaphore;
+
     public Cueva(Mapa mapa, int x, int y) {
         super(mapa, x, y);
-        this.semaphore = new Semaphore(1);
+        this.semaphore = new Semaphore(mapa.getSize()/2);
     }
 
     @Override
     public void run() {
-        
+
     }
 
     public Semaphore getSemaphore() {
@@ -23,5 +24,4 @@ public class Cueva extends Objetos{
         this.semaphore = semaphore;
     }
 
-    
 }

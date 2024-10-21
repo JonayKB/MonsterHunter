@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 
 public class Main {
     static double time = 0;
-    static final int SIZE = 10;
+    static final int SIZE = 20;
     static Mapa mapa = new Mapa(SIZE);
     static GeneradorMonstruo generadorMonstruo = new GeneradorMonstruo(mapa);
-    static ExecutorService entidades = Executors.newFixedThreadPool(12);
+    static ExecutorService entidades = Executors.newFixedThreadPool(20);
     static List<Monstruo> monstruos;
 
     public static void main(String[] args) {
@@ -28,22 +28,25 @@ public class Main {
         // generadorMonstruosThread.start();
         monstruos = new ArrayList<>();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i <= mapa.getSize(); i++) {
             Monstruo monstruo = new Monstruo(mapa, 3, 3);
             mapa.agregarObjeto(monstruo);
             Thread monstruoThread = new Thread(monstruo);
             monstruoThread.start();
             entidades.submit(monstruoThread);
             monstruos.add(monstruo);
-
+        }
+        for (int i = 0; i <= mapa.getSize() * 2; i++) {
+            PowerUp powerUp = new PowerUp(mapa, SIZE, SIZE);
+            mapa.agregarObjeto(powerUp);
         }
 
         Cueva cueva = new Cueva(mapa, 0, 0);
         mapa.agregarObjeto(cueva);
         Thread cuevaThread = new Thread(cueva);
         cuevaThread.start();
-
         entidades.submit(cuevaThread);
+
         while (true) {
             mostrarMapa(mapa, cazadores);
             try {
@@ -62,6 +65,12 @@ public class Main {
         }
     }
 
+    /**
+     * Muestra el mapa
+     * 
+     * @param mapa      a mostrar
+     * @param cazadores que estan en el juego
+     */
     public static void mostrarMapa(Mapa mapa, List<Cazador> cazadores) {
         System.out.print("\033[H\033[2J");
         System.out.flush();
