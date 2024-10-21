@@ -35,3 +35,4 @@ Esta version consta de estas caracteristicas:
 - Funcionamiento:
   - Cada hilo realiza las acciones sobre una clase estatica (monstruo ejecuta mapa.mover(this))
   - Evitar errores de concurrencia usando metodos synchronized en funciones de movimiento
+  
