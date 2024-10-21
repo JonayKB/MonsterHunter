@@ -58,6 +58,7 @@ public class Mapa {
         objeto.setX(posicionAleatoria[0]);
         objeto.setY(posicionAleatoria[1]);
         ubicaciones[posicionAleatoria[0]][posicionAleatoria[1]] = objeto;
+
     }
 
     public synchronized void moverObjeto(Objetos objeto) {
@@ -80,7 +81,12 @@ public class Mapa {
             if (ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]] instanceof Cueva) {
                 Monstruo monstruo = (Monstruo) objeto;
                 Cueva cueva = (Cueva) ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]];
-                monstruo.intentarEntrarCueva(cueva);
+
+                new Thread(() -> {
+                    monstruo.intentarEntrarCueva(cueva);
+
+                }).start();
+
             }
             if (ubicaciones[nuevaPosicion[0]][nuevaPosicion[1]] != null) {
                 return;

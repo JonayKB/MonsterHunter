@@ -11,7 +11,7 @@ public class Monstruo extends Objetos {
 
     @Override
     public void run() {
-        while (true) {
+        while (status) {
             getMapa().moverObjeto(this);
             try {
                 Thread.sleep(500);
@@ -20,29 +20,27 @@ public class Monstruo extends Objetos {
             }
             if (getPuntosDeVida() <= 0) {
                 getMapa().eliminarMonstruo(this);
-                break;
-            }
-            if (status == false) {
-                break;
+                status = false;
             }
         }
     }
 
     public void intentarEntrarCueva(Cueva cueva) {
+        System.out.println(cueva.getSemaphore().availablePermits());
         if (cueva.getSemaphore().tryAcquire()) {
-            System.out.println("Monstruo ha entrado en la cueva");
             try {
-                cueva.getSemaphore().acquire();
                 getMapa().eliminarMonstruo(this);
                 Thread.sleep(2000);
+                cueva.getSemaphore().release();
                 status = true;
                 getMapa().agregarObjeto(this);
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } finally {
+                run();
             }
-            cueva.getSemaphore().release();
-
         }
+
     }
 
     public int getPuntosDeVida() {

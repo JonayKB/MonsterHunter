@@ -2,37 +2,48 @@ package es.ies.puerto;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Main {
     static double time = 0;
-    static final int SIZE = 5;
+    static final int SIZE = 10;
     static Mapa mapa = new Mapa(SIZE);
     static GeneradorMonstruo generadorMonstruo = new GeneradorMonstruo(mapa);
+    static ExecutorService entidades = Executors.newFixedThreadPool(12);
+    static List<Monstruo> monstruos;
 
     public static void main(String[] args) {
         List<Cazador> cazadores = new ArrayList<>();
-        /**
-         * for (int i = 1; i <= 4; i++) {
-         * Cazador cazador = new Cazador(mapa, i, 0);
-         * cazadores.add(cazador);
-         * Thread cazadorThread = new Thread(cazador);
-         * cazadorThread.start();
-         * }
-         */
+
+        for (int i = 1; i <= 4; i++) {
+            Cazador cazador = new Cazador(mapa, i, 0);
+            cazadores.add(cazador);
+            Thread cazadorThread = new Thread(cazador);
+            cazadorThread.start();
+            entidades.submit(cazadorThread);
+        }
+
         // Thread generadorMonstruosThread = new Thread(generadorMonstruo);
         // generadorMonstruosThread.start();
-        Monstruo monstruo = new Monstruo(mapa, 3, 3);
-        mapa.agregarObjeto(monstruo);
-        Thread monstruoThread = new Thread(monstruo);
-        monstruoThread.start();
-        Monstruo monstruo2 = new Monstruo(mapa, 3, 3);
-        mapa.agregarObjeto(monstruo2);
-        Thread monstruoThread2 = new Thread(monstruo2);
-        monstruoThread2.start();
+        monstruos = new ArrayList<>();
+
+        for (int i = 0; i < 8; i++) {
+            Monstruo monstruo = new Monstruo(mapa, 3, 3);
+            mapa.agregarObjeto(monstruo);
+            Thread monstruoThread = new Thread(monstruo);
+            monstruoThread.start();
+            entidades.submit(monstruoThread);
+            monstruos.add(monstruo);
+
+        }
+
         Cueva cueva = new Cueva(mapa, 0, 0);
         mapa.agregarObjeto(cueva);
         Thread cuevaThread = new Thread(cueva);
         cuevaThread.start();
+
+        entidades.submit(cuevaThread);
         while (true) {
             mostrarMapa(mapa, cazadores);
             try {
@@ -43,6 +54,8 @@ public class Main {
             }
             if (time >= 30) {
                 mostrarMapa(mapa, cazadores);
+                entidades.shutdown();
+
                 System.exit(0);
             }
 
@@ -50,7 +63,7 @@ public class Main {
     }
 
     public static void mostrarMapa(Mapa mapa, List<Cazador> cazadores) {
-        // System.out.print("\033[H\033[2J");
+        System.out.print("\033[H\033[2J");
         System.out.flush();
         System.out.println(mapa.mostrarMapa());
         System.out.println("Cazadores:");
@@ -58,7 +71,15 @@ public class Main {
             System.out.println("    Monstruos Cazados: " + cazador.getMonstruosCazados());
         }
         System.out.println("Monstruos:");
-        for (Monstruo monstruo : generadorMonstruo.getMonstruos()) {
+        /**
+         * for (Monstruo monstruo : generadorMonstruo.getMonstruos()) {
+         * if (monstruo != null && monstruo.getPuntosDeVida() > 0) {
+         * System.out.println(" Vida: " + monstruo.getPuntosDeVida());
+         * 
+         * }
+         */
+
+        for (Monstruo monstruo : monstruos) {
             if (monstruo != null && monstruo.getPuntosDeVida() > 0) {
                 System.out.println("    Vida: " + monstruo.getPuntosDeVida());
 

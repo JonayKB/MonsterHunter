@@ -7,7 +7,7 @@ public class Cueva extends Objetos{
     private Semaphore semaphore;
     public Cueva(Mapa mapa, int x, int y) {
         super(mapa, x, y);
-        this.semaphore = new Semaphore(3);
+        this.semaphore = new Semaphore(1);
     }
 
     @Override
